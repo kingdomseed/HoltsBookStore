@@ -41,16 +41,16 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
         });
     }
 
-    private void InsertPet()
+    private void insertBook()
     {
-        Uri uri;
-        ContentValues petValues = new ContentValues();
-        petValues.put(PetEntry.COLUMN_PET_NAME, "Miliani");
-        petValues.put(PetEntry.COLUMN_PET_BREED, "Shepherd");
-        petValues.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_FEMALE);
-        petValues.put(PetEntry.COLUMN_PET_WEIGHT, 45);
-
-        uri = getContentResolver().insert(PetEntry.CONTENT_URI, petValues);
+//        Uri uri;
+//        ContentValues petValues = new ContentValues();
+//        petValues.put(PetEntry.COLUMN_PET_NAME, "Miliani");
+//        petValues.put(PetEntry.COLUMN_PET_BREED, "Shepherd");
+//        petValues.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_FEMALE);
+//        petValues.put(PetEntry.COLUMN_PET_WEIGHT, 45);
+//
+//        uri = getContentResolver().insert(PetEntry.CONTENT_URI, petValues);
     }
 
     @Override
@@ -68,23 +68,20 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // User clicked on a menu option in the app bar overflow menu
         switch (item.getItemId()) {
-            // Respond to a click on the "Insert dummy data" menu option
             case R.id.action_insert_dummy_data:
-                InsertPet();
+                insertBook();
                 return true;
-            // Respond to a click on the "Delete all entries" menu option
             case R.id.action_delete_all_entries:
-                deleteAllPets();
+                deleteAllBooks();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void deleteAllPets() {
-        int rowsDeleted = getContentResolver().delete(PetEntry.CONTENT_URI, null, null);
-        Log.v("CatalogActivity", rowsDeleted + " rows deleted from pet database");
+    private void deleteAllBooks() {
+        int rowsDeleted = getContentResolver().delete(BookEntry.CONTENT_URI, null, null);
+        Log.v("Book List Activity", rowsDeleted + " rows deleted from book database");
     }
 
     @Override
@@ -92,17 +89,17 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
     {
         // Projection
         String[] project = {
-                PetEntry._ID,
-                PetEntry.COLUMN_PET_NAME,
-                PetEntry.COLUMN_PET_BREED };
+                BookEntry._ID,
+                BookEntry.COLUMN_BOOK_NAME,
+                BookEntry.COLUMN_SUPPLIER_NAME };
 
-        return new CursorLoader(this, PetEntry.CONTENT_URI, project, null, null, null);
+        return new CursorLoader(this, BookEntry.CONTENT_URI, project, null, null, null);
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data)
     {
-        petCursorAdapter.swapCursor(data);
+        bookCursorAdapter.swapCursor(data);
     }
 
     @Override

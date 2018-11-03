@@ -58,7 +58,16 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            bookHasChanged = true;
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    bookHasChanged = true;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    view.performClick();
+                    break;
+                default:
+                    break;
+            }
             return false;
         }
     };
@@ -281,5 +290,5 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 //                        Toast.LENGTH_SHORT).show();
 //            }
         }
-    }
+
 }
