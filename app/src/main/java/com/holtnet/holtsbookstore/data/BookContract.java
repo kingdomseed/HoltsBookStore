@@ -26,12 +26,11 @@ public class BookContract {
         public static final String CONTENT_ITEM_TYPE =
                 ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_BOOKS;
 
-
         // Books table
         public final static String TABLE_NAME = "books";
 
         public static final String _ID = BaseColumns._ID;
-        public static final String COLUMN_PRODUCT_NAME = "book";
+        public static final String COLUMN_BOOK_NAME = "book";
         public static final String COLUMN_SUPPLIER_NAME = "supplier";
         public static final String COLUMN_PRICE = "price";
         public static final String COLUMN_QUANTITY = "quantity";

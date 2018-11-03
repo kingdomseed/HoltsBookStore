@@ -16,10 +16,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <provider
             android:name=".data.BookProvider"
             android:authorities="com.holtnet.holtsbookstore.books"
             android:exported="false" />
+
+        <activity android:name=".EditorActivity"></activity>
     </application>
 
 </manifest>

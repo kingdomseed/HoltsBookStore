@@ -13,8 +13,6 @@ import com.holtnet.holtsbookstore.data.BookContract.BookEntry;
 
 public class BookProvider extends ContentProvider {
 
-    // TODO: complete insert, update, and delete methods
-
     private BookDbHelper bookDbHelper;
 
     // URI Matcher Codes for the Book table and a single Book in the table
@@ -75,14 +73,28 @@ public class BookProvider extends ContentProvider {
     }
 
     private Uri insertBook(Uri uri, ContentValues contentValues) {
-        String bookName = contentValues.getAsString(BookEntry.COLUMN_PRODUCT_NAME);
+        String bookName = contentValues.getAsString(BookEntry.COLUMN_BOOK_NAME);
         String supplierName = contentValues.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
-        Integer price = contentValues.getAsInteger(BookEntry.COLUMN_PRICE);
+        Double price = contentValues.getAsDouble(BookEntry.COLUMN_PRICE);
+        Integer quantity = contentValues.getAsInteger(BookEntry.COLUMN_QUANTITY);
+        String phoneNumber = contentValues.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
         if (bookName == null) {
             throw new IllegalArgumentException("Book name is required to add a book.");
         }
-        if (price < 0) {
-            throw new IllegalArgumentException("Book must be given a non-negative value.");
+        if(supplierName == null)
+        {
+            throw new IllegalArgumentException("Book must be given a supplier name.");
+        }
+        if (price < 0.0) {
+            throw new IllegalArgumentException("Book price must be given a non-negative value.");
+        }
+        if(quantity < 0)
+        {
+            throw new IllegalArgumentException("Book quantity must be given a non-negative value.");
+        }
+        if(phoneNumber == null || phoneNumber.length() < 10)
+        {
+            throw new IllegalArgumentException("Supplier phone number must be 10 digits.");
         }
 
         SQLiteDatabase database = bookDbHelper.getWritableDatabase();
@@ -115,12 +127,35 @@ public class BookProvider extends ContentProvider {
     }
 
     private int updateBook(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
-        // If the {@link PetEntry#COLUMN_PET_NAME} key is present,
-        // check that the name value is not null.
-        if (contentValues.containsKey(BookEntry.COLUMN_PRODUCT_NAME)) {
-            String name = contentValues.getAsString(BookEntry.COLUMN_PRODUCT_NAME);
-            if (name == null) {
+
+        if (contentValues.containsKey(BookEntry.COLUMN_BOOK_NAME)) {
+            String bookName = contentValues.getAsString(BookEntry.COLUMN_BOOK_NAME);
+            if (bookName == null) {
                 throw new IllegalArgumentException("You must enter a Book name.");
+            }
+        }
+        if (contentValues.containsKey(BookEntry.COLUMN_SUPPLIER_NAME)) {
+            String supplierName = contentValues.getAsString(BookEntry.COLUMN_SUPPLIER_NAME);
+            if (supplierName == null) {
+                throw new IllegalArgumentException("Book must be given a supplier name.");
+            }
+        }
+        if (contentValues.containsKey(BookEntry.COLUMN_PRICE)) {
+            String price = contentValues.getAsString(BookEntry.COLUMN_PRICE);
+            if (price == null) {
+                throw new IllegalArgumentException("Book price must be given a non-negative value.");
+            }
+        }
+        if (contentValues.containsKey(BookEntry.COLUMN_QUANTITY)) {
+            String quantity = contentValues.getAsString(BookEntry.COLUMN_QUANTITY);
+            if (quantity == null) {
+                throw new IllegalArgumentException("Book quantity must be given a non-negative value.");
+            }
+        }
+        if (contentValues.containsKey(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER)) {
+            String phoneNumber = contentValues.getAsString(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER);
+            if (phoneNumber == null || phoneNumber.length() < 10) {
+                throw new IllegalArgumentException("Supplier phone number must be 10 digits.");
             }
         }
 
