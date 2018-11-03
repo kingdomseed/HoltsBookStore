@@ -18,4 +18,13 @@
     <string name="cancel">Cancel</string>
     <string name="error_deleting_book">Error Deleting Book</string>
     <string name="book_deleted">Book Deleted</string>
+    <string name="price">Price: $</string>
+    <string name="quantity">Quantity:</string>
+    <string name="supplier_name_hint">Amazon</string>
+    <string name="price_hint">10.00</string>
+    <string name="quantity_hint">10</string>
+    <string name="supplier_name">Supplier Name:</string>
+    <string name="book_supplier_information">Book Supplier Information</string>
+    <string name="phone_hint">4562317809</string>
+    <string name="phone_number">Phone Number:</string>
 </resources>
