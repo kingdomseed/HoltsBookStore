@@ -2,4 +2,20 @@
     <string name="app_name">Holt\'s Book Store</string>
     <string name="empty_view_title_text">Nothing to show at the moment...</string>
     <string name="empty_view_subtitle_text">To begin, add some books to your inventory.</string>
+    <string name="book_name_hint">Moby Dick</string>
+    <string name="book_name">Book Name:</string>
+    <string name="general_book_information">General Book Information</string>
+    <string name="edit_book_title">Edit your book</string>
+    <string name="add_book_title">Add a new book</string>
+    <string name="insert_dummy_data">Insert Dummy Data</string>
+    <string name="delete_all_entries">Delete All Entries</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="unsaved_changes">You have unsaved changes! Save or discard?</string>
+    <string name="discard">Discard</string>
+    <string name="keep_editing">Keep Editing</string>
+    <string name="delete_this_book">Delete this book?</string>
+    <string name="cancel">Cancel</string>
+    <string name="error_deleting_book">Error Deleting Book</string>
+    <string name="book_deleted">Book Deleted</string>
 </resources>

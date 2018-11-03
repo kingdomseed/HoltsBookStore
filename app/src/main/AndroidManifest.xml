@@ -16,13 +16,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".EditorActivity"
+            android:parentActivityName=".BookListActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".BookListActivity" />
+
+        </activity>
 
         <provider
             android:name=".data.BookProvider"
             android:authorities="com.holtnet.holtsbookstore.books"
             android:exported="false" />
-
-        <activity android:name=".EditorActivity"></activity>
     </application>
 
 </manifest>
