@@ -201,10 +201,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Update the views on the screen with the values from the database
             editBookNameText.setText(bookName);
 
-            NumberFormat formatter = NumberFormat.getCurrencyInstance();
-            editBookPriceText.setText(formatter.format(bookPrice));
+            editBookPriceText.setText(String.valueOf(bookPrice));
 
-            editBookQuantityText.setText(bookQuantity);
+            editBookQuantityText.setText(String.valueOf(bookQuantity));
             editSupplierNameText.setText(supplierName);
             editSupplierPhoneText.setText(supplierPhoneNumber);
         }

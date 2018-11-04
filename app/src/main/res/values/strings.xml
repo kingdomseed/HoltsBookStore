@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Holt\'s Book Store</string>
-    <string name="empty_view_title_text">Nothing to show at the moment...</string>
+    <string name="empty_view_title_text">Nothing to show at the moment…</string>
     <string name="empty_view_subtitle_text">To begin, add some books to your inventory.</string>
     <string name="book_name_hint">Moby Dick</string>
     <string name="book_name">Book Name:</string>
