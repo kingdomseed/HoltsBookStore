@@ -13,18 +13,17 @@ import com.holtnet.holtsbookstore.data.BookContract.BookEntry;
 
 public class BookProvider extends ContentProvider {
 
-    private BookDbHelper bookDbHelper;
-
     // URI Matcher Codes for the Book table and a single Book in the table
     private static final int BOOKS = 100;
     private static final int BOOKS_ID = 101;
-
     private static final UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
     static {
         uriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS, BOOKS);
         uriMatcher.addURI(BookContract.CONTENT_AUTHORITY, BookContract.PATH_BOOKS + "/#", BOOKS_ID);
     }
+
+    private BookDbHelper bookDbHelper;
 
     @Override
     public boolean onCreate() {
@@ -34,7 +33,7 @@ public class BookProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
-                        String sortOrder)  {
+                        String sortOrder) {
 
         SQLiteDatabase database = bookDbHelper.getReadableDatabase();
 
@@ -48,7 +47,7 @@ public class BookProvider extends ContentProvider {
                 break;
             case BOOKS_ID:
                 selection = BookEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
 
                 cursor = database.query(BookEntry.TABLE_NAME, projection, selection, selectionArgs,
                         null, null, sortOrder);
@@ -64,7 +63,7 @@ public class BookProvider extends ContentProvider {
     @Override
     public Uri insert(Uri uri, ContentValues contentValues) {
         int match = uriMatcher.match(uri);
-        switch(match) {
+        switch (match) {
             case BOOKS:
                 return insertBook(uri, contentValues);
             default:
@@ -81,19 +80,16 @@ public class BookProvider extends ContentProvider {
         if (bookName == null) {
             throw new IllegalArgumentException("Book name is required to add a book.");
         }
-        if(supplierName == null)
-        {
+        if (supplierName == null) {
             throw new IllegalArgumentException("Book must be given a supplier name.");
         }
         if (price < 0.0) {
             throw new IllegalArgumentException("Book price must be given a non-negative value.");
         }
-        if(quantity < 0)
-        {
+        if (quantity < 0) {
             throw new IllegalArgumentException("Book quantity must be given a non-negative value.");
         }
-        if(phoneNumber == null || phoneNumber.length() < 10)
-        {
+        if (phoneNumber == null || phoneNumber.length() < 10) {
             throw new IllegalArgumentException("Supplier phone number must be 10 digits.");
         }
 
@@ -118,7 +114,7 @@ public class BookProvider extends ContentProvider {
                 return updateBook(uri, contentValues, selection, selectionArgs);
             case BOOKS_ID:
                 selection = BookEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 return updateBook(uri, contentValues, selection, selectionArgs);
             default:
                 throw new IllegalArgumentException("Update is unsupported for: " + uri);
@@ -167,8 +163,7 @@ public class BookProvider extends ContentProvider {
 
         int rowsUpdated = database.update(BookEntry.TABLE_NAME, contentValues, selection, selectionArgs);
 
-        if(rowsUpdated != 0)
-        {
+        if (rowsUpdated != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         // Returns the number of database rows affected by the update statement
@@ -190,7 +185,7 @@ public class BookProvider extends ContentProvider {
             case BOOKS_ID:
                 // Delete a single row given by the ID in the URI
                 selection = BookEntry._ID + "=?";
-                selectionArgs = new String[] { String.valueOf(ContentUris.parseId(uri)) };
+                selectionArgs = new String[]{String.valueOf(ContentUris.parseId(uri))};
                 rowsDeleted = database.delete(BookEntry.TABLE_NAME, selection, selectionArgs);
                 break;
             default:

@@ -30,8 +30,7 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
     BookCursorAdapter bookCursorAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -62,11 +61,9 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
         });
 
         getLoaderManager().initLoader(BOOK_LOADER, null, this);
-
     }
 
-    private void insertBook()
-    {
+    private void insertBook() {
 
         Uri uri;
         ContentValues bookValues = new ContentValues();
@@ -111,8 +108,7 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args)
-    {
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         // Projection
         String[] project = {
                 BookEntry._ID,
@@ -126,8 +122,7 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
     }
 
     @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data)
-    {
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         bookCursorAdapter.swapCursor(data);
     }
 

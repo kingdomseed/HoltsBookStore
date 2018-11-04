@@ -37,7 +37,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-
             bookHasChanged = true;
             return false;
         }
@@ -277,11 +276,13 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (!TextUtils.isEmpty(bookPriceString)) {
             price = Double.parseDouble(bookPriceString);
         }
+        bookValues.put(BookEntry.COLUMN_PRICE, price);
 
         int quantity = 0;
         if (!TextUtils.isEmpty(bookQuantityString)) {
             quantity = Integer.parseInt(bookQuantityString);
         }
+        bookValues.put(BookEntry.COLUMN_QUANTITY, quantity);
 
         if (currentBookUri == null) {
             Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, bookValues);
