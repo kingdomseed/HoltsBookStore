@@ -1,6 +1,7 @@
 package com.holtnet.holtsbookstore;
 
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.holtnet.holtsbookstore.data.BookDbHelper;
@@ -39,18 +42,41 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
                 startActivity(intent);
             }
         });
+
+        ListView bookListView = findViewById(R.id.list_view_books);
+
+        View emptyList = findViewById(R.id.empty_view);
+        bookListView.setEmptyView(emptyList);
+
+        bookCursorAdapter = new BookCursorAdapter(this, null);
+        bookListView.setAdapter(bookCursorAdapter);
+
+        bookListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(BookListActivity.this, EditorActivity.class);
+                Uri currentBookUri = ContentUris.withAppendedId(BookEntry.CONTENT_URI, id);
+                intent.setData(currentBookUri);
+                startActivity(intent);
+            }
+        });
+
+        getLoaderManager().initLoader(BOOK_LOADER, null, this);
+
     }
 
     private void insertBook()
     {
-//        Uri uri;
-//        ContentValues petValues = new ContentValues();
-//        petValues.put(PetEntry.COLUMN_PET_NAME, "Miliani");
-//        petValues.put(PetEntry.COLUMN_PET_BREED, "Shepherd");
-//        petValues.put(PetEntry.COLUMN_PET_GENDER, PetEntry.GENDER_FEMALE);
-//        petValues.put(PetEntry.COLUMN_PET_WEIGHT, 45);
-//
-//        uri = getContentResolver().insert(PetEntry.CONTENT_URI, petValues);
+
+        Uri uri;
+        ContentValues bookValues = new ContentValues();
+        bookValues.put(BookEntry.COLUMN_BOOK_NAME, "Moby Dick");
+        bookValues.put(BookEntry.COLUMN_SUPPLIER_NAME, "Amazon");
+        bookValues.put(BookEntry.COLUMN_PRICE, 10.00);
+        bookValues.put(BookEntry.COLUMN_QUANTITY, 45);
+        bookValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, "4567893210");
+
+        uri = getContentResolver().insert(BookEntry.CONTENT_URI, bookValues);
     }
 
     @Override
@@ -91,7 +117,10 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
         String[] project = {
                 BookEntry._ID,
                 BookEntry.COLUMN_BOOK_NAME,
-                BookEntry.COLUMN_SUPPLIER_NAME };
+                BookEntry.COLUMN_SUPPLIER_NAME,
+                BookEntry.COLUMN_PRICE,
+                BookEntry.COLUMN_QUANTITY
+        };
 
         return new CursorLoader(this, BookEntry.CONTENT_URI, project, null, null, null);
     }

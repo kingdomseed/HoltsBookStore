@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
+import android.icu.text.NumberFormat;
 import android.net.Uri;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.holtnet.holtsbookstore.data.BookContract.BookEntry;
@@ -27,6 +29,21 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private Uri currentBookUri;
     private boolean bookHasChanged = false;
 
+    private EditText editBookNameText;
+    private EditText editBookPriceText;
+    private EditText editBookQuantityText;
+    private EditText editSupplierNameText;
+    private EditText editSupplierPhoneText;
+    private View.OnTouchListener touchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+
+            bookHasChanged = true;
+            return false;
+        }
+
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +52,25 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         Intent intent = getIntent();
         currentBookUri = intent.getData();
 
-        if(currentBookUri == null)
-        {
+        if (currentBookUri == null) {
             setTitle(R.string.edit_book_title);
             invalidateOptionsMenu();
         } else {
             setTitle(R.string.add_book_title);
             getLoaderManager().initLoader(EXISTING_BOOK_LOADER, null, this);
         }
+
+        editBookNameText = findViewById(R.id.editBookName);
+        editBookPriceText = findViewById(R.id.editTextPrice);
+        editBookQuantityText = findViewById(R.id.editTextQuantity);
+        editSupplierNameText = findViewById(R.id.editSupplierName);
+        editSupplierPhoneText = findViewById(R.id.editSupplyNumber);
+
+        editBookNameText.setOnTouchListener(touchListener);
+        editBookPriceText.setOnTouchListener(touchListener);
+        editBookQuantityText.setOnTouchListener(touchListener);
+        editSupplierNameText.setOnTouchListener(touchListener);
+        editSupplierPhoneText.setOnTouchListener(touchListener);
     }
 
     @Override
@@ -54,23 +82,6 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         }
         return true;
     }
-
-    private View.OnTouchListener touchListener = new View.OnTouchListener() {
-        @Override
-        public boolean onTouch(View view, MotionEvent motionEvent) {
-            switch (motionEvent.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    bookHasChanged = true;
-                    break;
-                case MotionEvent.ACTION_UP:
-                    view.performClick();
-                    break;
-                default:
-                    break;
-            }
-            return false;
-        }
-    };
 
     private void showUnsavedChangesDialog(
             DialogInterface.OnClickListener discardButtonClickListener) {
@@ -189,19 +200,24 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             String supplierPhoneNumber = cursor.getString(supplierPhoneNumberColumnIndex);
 
             // Update the views on the screen with the values from the database
-            //mNameEditText.setText(name);
-            //mBreedEditText.setText(breed);
-            //mWeightEditText.setText(Integer.toString(weight));
+            editBookNameText.setText(bookName);
+
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
+            editBookPriceText.setText(formatter.format(bookPrice));
+
+            editBookQuantityText.setText(bookQuantity);
+            editSupplierNameText.setText(supplierName);
+            editSupplierPhoneText.setText(supplierPhoneNumber);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
-        // If the loader is invalidated, clear out all the data from the input fields.
-        //mNameEditText.setText("");
-        //mBreedEditText.setText("");
-        //mWeightEditText.setText("");
-        //mGenderSpinner.setSelection(0); // Select "Unknown" gender
+        editBookNameText.setText("");
+        editBookPriceText.setText("");
+        editBookPriceText.setText("");
+        editSupplierNameText.setText("");
+        editSupplierPhoneText.setText("");
     }
 
     private void showDeleteConfirmationDialog() {
@@ -239,56 +255,62 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     }
 
     private void saveBook() {
-//        String nameString = mNameEditText.getText().toString().trim();
-//        String breedString = mBreedEditText.getText().toString().trim();
-//        String weightString = mWeightEditText.getText().toString().trim();
-//
-//        if (currentBookUri == null &&
-//                TextUtils.isEmpty(nameString) && TextUtils.isEmpty(breedString) &&
-//                TextUtils.isEmpty(weightString) && mGender == PetEntry.GENDER_UNKNOWN)
-//        {return;}
-//
-//        ContentValues petValues = new ContentValues();
-//        petValues.put(PetEntry.COLUMN_PET_NAME, nameString);
-//        petValues.put(PetEntry.COLUMN_PET_BREED, breedString);
-//
-//        int weight = 0;
-//        if (!TextUtils.isEmpty(weightString)) {
-//            weight = Integer.parseInt(weightString);
-//        }
-//        petValues.put(PetEntry.COLUMN_PET_WEIGHT, weight);
-//        petValues.put(PetEntry.COLUMN_PET_GENDER, mGender);
-//
-//        if (currentPetUri == null) {
-//            Uri newUri = getContentResolver().insert(PetEntry.CONTENT_URI, petValues);
-//            // Show a toast message depending on whether or not the insertion was successful.
-//            if (newUri == null) {
-//                // If the new content URI is null, then there was an error with insertion.
-//                Toast.makeText(this, getString(R.string.insert_pet_failed_toast),
-//                        Toast.LENGTH_SHORT).show();
-//            } else {
-//                // Otherwise, the insertion was successful and we can display a toast.
-//                Toast.makeText(this, getString(R.string.inserting_pet_success),
-//                        Toast.LENGTH_SHORT).show();
-//            }
-//
-//        } else {
-//            // Otherwise this is an EXISTING pet, so update the pet with content URI: mCurrentPetUri
-//            // and pass in the new ContentValues. Pass in null for the selection and selection args
-//            // because mCurrentPetUri will already identify the correct row in the database that
-//            // we want to modify.
-//            int rowsAffected = getContentResolver().update(currentPetUri, petValues, null, null);
-//
-//            // Show a toast message depending on whether or not the update was successful.
-//            if (rowsAffected == 0) {
-//                // If no rows were affected, then there was an error with the update.
-//                Toast.makeText(this, getString(R.string.update_pet_fail),
-//                        Toast.LENGTH_SHORT).show();
-//            } else {
-//                // Otherwise, the update was successful and we can display a toast.
-//                Toast.makeText(this, getString(R.string.update_pet_success),
-//                        Toast.LENGTH_SHORT).show();
-//            }
+
+        String bookNameString = editBookNameText.getText().toString().trim();
+        String bookPriceString = editBookPriceText.getText().toString().trim();
+        String bookQuantityString = editBookQuantityText.getText().toString().trim();
+        String supplierNameString = editSupplierNameText.getText().toString().trim();
+        String supplierNumberString = editSupplierPhoneText.getText().toString().trim();
+
+        if (currentBookUri == null &&
+                TextUtils.isEmpty(bookNameString) && TextUtils.isEmpty(bookPriceString) &&
+                TextUtils.isEmpty(bookQuantityString) && TextUtils.isEmpty(supplierNameString) && TextUtils.isEmpty(supplierNumberString)) {
+            return;
         }
+
+        ContentValues bookValues = new ContentValues();
+        bookValues.put(BookEntry.COLUMN_BOOK_NAME, bookNameString);
+        bookValues.put(BookEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
+        bookValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, supplierNumberString);
+
+        double price = 0.00;
+        if (!TextUtils.isEmpty(bookPriceString)) {
+            price = Double.parseDouble(bookPriceString);
+        }
+
+        int quantity = 0;
+        if (!TextUtils.isEmpty(bookQuantityString)) {
+            quantity = Integer.parseInt(bookQuantityString);
+        }
+
+        if (currentBookUri == null) {
+            Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, bookValues);
+            // Show a toast message depending on whether or not the insertion was successful.
+            if (newUri == null) {
+                // If the new content URI is null, then there was an error with insertion.
+                Toast.makeText(this, getString(R.string.error_inserting),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the insertion was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.book_insert_success),
+                        Toast.LENGTH_SHORT).show();
+            }
+
+        } else {
+
+            int rowsAffected = getContentResolver().update(currentBookUri, bookValues, null, null);
+
+            // Show a toast message depending on whether or not the update was successful.
+            if (rowsAffected == 0) {
+                // If no rows were affected, then there was an error with the update.
+                Toast.makeText(this, getString(R.string.update_book_fail),
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                // Otherwise, the update was successful and we can display a toast.
+                Toast.makeText(this, getString(R.string.update_book_success),
+                        Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 }
