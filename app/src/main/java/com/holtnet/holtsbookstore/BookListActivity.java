@@ -113,7 +113,6 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
         String[] project = {
                 BookEntry._ID,
                 BookEntry.COLUMN_BOOK_NAME,
-                BookEntry.COLUMN_SUPPLIER_NAME,
                 BookEntry.COLUMN_PRICE,
                 BookEntry.COLUMN_QUANTITY
         };

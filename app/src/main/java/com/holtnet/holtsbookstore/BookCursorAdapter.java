@@ -26,28 +26,23 @@ public class BookCursorAdapter extends CursorAdapter {
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         TextView bookNameItem = view.findViewById(R.id.bookNameItem);
-        TextView supplierNameItem = view.findViewById(R.id.supplierNameItem);
         TextView bookPriceItem = view.findViewById(R.id.priceItem);
         TextView bookInStockItem = view.findViewById(R.id.inStockItem);
 
         int bookNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_NAME);
-        int supplierNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_SUPPLIER_NAME);
         int priceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRICE);
         int quantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_QUANTITY);
 
         String bookName = cursor.getString(bookNameColumnIndex);
-        String supplierName = cursor.getString(supplierNameColumnIndex);
         double price = cursor.getDouble(priceColumnIndex);
         int quantity = cursor.getInt(quantityColumnIndex);
 
         bookNameItem.setText(bookName);
-        supplierNameItem.setText(supplierName);
-
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         bookPriceItem.setText(formatter.format(price));
         if(quantity > 0)
         {
-            bookInStockItem.setText(context.getString(R.string.in_stock));
+            bookInStockItem.setText(context.getString(R.string.in_stock) + quantity);
         } else
         {
             bookInStockItem.setText(context.getString(R.string.out_of_stock));
