@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -46,6 +47,8 @@ public class BookListActivity extends AppCompatActivity implements LoaderManager
 
         View emptyList = findViewById(R.id.empty_view);
         bookListView.setEmptyView(emptyList);
+
+        Button sellButton = findViewById(R.id.sell_button);
 
         bookCursorAdapter = new BookCursorAdapter(this, null);
         bookListView.setAdapter(bookCursorAdapter);
