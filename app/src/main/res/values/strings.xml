@@ -34,4 +34,8 @@
     <string name="update_book_fail">Updating the book failed.</string>
     <string name="update_book_success">Updating the book was a success!</string>
     <string name="sell">Sell</string>
+    <string name="quan">Quantity:</string>
+    <string name="not_in_stock_toast">This book is not in stock.</string>
+    <string name="sold_toast">Sold!</string>
+    <string name="error_selling_book">There was an error selling the book.</string>
 </resources>
