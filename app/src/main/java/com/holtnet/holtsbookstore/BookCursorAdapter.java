@@ -1,7 +1,5 @@
 package com.holtnet.holtsbookstore;
 
-import android.annotation.SuppressLint;
-import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

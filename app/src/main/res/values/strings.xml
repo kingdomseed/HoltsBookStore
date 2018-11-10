@@ -38,4 +38,7 @@
     <string name="not_in_stock_toast">This book is not in stock.</string>
     <string name="sold_toast">Sold!</string>
     <string name="error_selling_book">There was an error selling the book.</string>
+    <string name="call_supplier">Call Supplier</string>
+    <string name="addInventory">+</string>
+    <string name="subtractInventory">-</string>
 </resources>
