@@ -52,14 +52,22 @@ public class BookCursorAdapter extends CursorAdapter {
 
         updateQuantityTextView(quantity, bookInStockItem, context);
 
+        final int columnIndex = cursor.getColumnIndex(BookEntry._ID);
+
         sellButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Uri selectedBookUri = ContentUris.withAppendedId (BookEntry.CONTENT_URI, cursor.getColumnIndex(BookEntry._ID));
+                Uri selectedBookUri = ContentUris.withAppendedId (BookEntry.CONTENT_URI, columnIndex);
                 ContentValues values = new ContentValues();
                 quantity--;
                 values.put ( BookEntry.COLUMN_QUANTITY, quantity);
                 int rowsAffected = context.getContentResolver().update(selectedBookUri, values, null, null);
+                if(rowsAffected == 0)
+                {
+
+                } else {
+
+                }
                 updateQuantityTextView(quantity, bookInStockItem, context);
             }
         });
@@ -69,7 +77,8 @@ public class BookCursorAdapter extends CursorAdapter {
     {
         if(quantity > 0)
         {
-            bookInStockItem.setText(context.getString(R.string.in_stock) + quantity);
+            StringBuilder stringBuilder = new StringBuilder(context.getString(R.string.in_stock));
+            bookInStockItem.setText(stringBuilder.append(quantity));
         } else
         {
             bookInStockItem.setText(context.getString(R.string.out_of_stock));
