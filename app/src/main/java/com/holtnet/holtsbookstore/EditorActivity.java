@@ -2,6 +2,7 @@ package com.holtnet.holtsbookstore;
 
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,6 +36,15 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     private EditText editBookQuantityText;
     private EditText editSupplierNameText;
     private EditText editSupplierPhoneText;
+
+    private Button addButton;
+    private Button subtractButton;
+    private Button callSupplierButton;
+
+    private boolean toBeOrNotToBeValid = false;
+
+    private int quantity = 0;
+
     private View.OnTouchListener touchListener = new View.OnTouchListener() {
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -64,12 +75,49 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         editBookQuantityText = findViewById(R.id.editTextQuantity);
         editSupplierNameText = findViewById(R.id.editSupplierName);
         editSupplierPhoneText = findViewById(R.id.editSupplyNumber);
+        addButton = findViewById(R.id.addButton);
+        subtractButton = findViewById(R.id.subtractButton);
+        callSupplierButton = findViewById(R.id.callButton);
 
         editBookNameText.setOnTouchListener(touchListener);
         editBookPriceText.setOnTouchListener(touchListener);
         editBookQuantityText.setOnTouchListener(touchListener);
         editSupplierNameText.setOnTouchListener(touchListener);
         editSupplierPhoneText.setOnTouchListener(touchListener);
+
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                quantity++;
+                editBookQuantityText.setText(String.valueOf(quantity));
+            }
+        });
+
+        subtractButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (quantity > 0) {
+                    quantity--;
+                    editBookQuantityText.setText(String.valueOf(quantity));
+                } else {
+                    Toast.makeText(EditorActivity.this, getString(R.string.quantity_too_small), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        callSupplierButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(editSupplierPhoneText.getText())) {
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse(("tel:" + editSupplierPhoneText.getText().toString())));
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(EditorActivity.this, getString(R.string.enter_phone_first), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
     @Override
@@ -128,8 +176,11 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_save:
-                saveBook();
-                finish();
+                    saveBook();
+                    if(toBeOrNotToBeValid)
+                    {
+                        finish();
+                    }
                 return true;
             case R.id.action_delete:
                 showDeleteConfirmationDialog();
@@ -181,10 +232,8 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return;
         }
 
-        // Proceed with moving to the first row of the cursor and reading data from it
-        // (This should be the only row in the cursor)
         if (cursor.moveToFirst()) {
-            // Find the columns of pet attributes that we're interested in
+
             int bookNameColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_BOOK_NAME);
             int bookPriceColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_PRICE);
             int bookQuantityColumnIndex = cursor.getColumnIndex(BookEntry.COLUMN_QUANTITY);
@@ -194,7 +243,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             // Extract out the value from the Cursor for the given column index
             String bookName = cursor.getString(bookNameColumnIndex);
             double bookPrice = cursor.getDouble(bookPriceColumnIndex);
-            int bookQuantity = cursor.getInt(bookQuantityColumnIndex);
+            quantity = cursor.getInt(bookQuantityColumnIndex);
             String supplierName = cursor.getString(supplierNameColumnIndex);
             String supplierPhoneNumber = cursor.getString(supplierPhoneNumberColumnIndex);
 
@@ -203,7 +252,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
 
             editBookPriceText.setText(String.valueOf(bookPrice));
 
-            editBookQuantityText.setText(String.valueOf(bookQuantity));
+            editBookQuantityText.setText(String.valueOf(quantity));
             editSupplierNameText.setText(supplierName);
             editSupplierPhoneText.setText(supplierPhoneNumber);
         }
@@ -252,7 +301,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         finish();
     }
 
-    private void saveBook() {
+    private boolean saveBook() {
 
         String bookNameString = editBookNameText.getText().toString().trim();
         String bookPriceString = editBookPriceText.getText().toString().trim();
@@ -263,25 +312,52 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
         if (currentBookUri == null &&
                 TextUtils.isEmpty(bookNameString) && TextUtils.isEmpty(bookPriceString) &&
                 TextUtils.isEmpty(bookQuantityString) && TextUtils.isEmpty(supplierNameString) && TextUtils.isEmpty(supplierNumberString)) {
-            return;
+            return toBeOrNotToBeValid;
         }
 
         ContentValues bookValues = new ContentValues();
-        bookValues.put(BookEntry.COLUMN_BOOK_NAME, bookNameString);
-        bookValues.put(BookEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
-        bookValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, supplierNumberString);
+        if (!TextUtils.isEmpty(bookNameString)) {
+            bookValues.put(BookEntry.COLUMN_BOOK_NAME, bookNameString);
+        } else {
+            Toast.makeText(EditorActivity.this, getString(R.string.enter_book_name), Toast.LENGTH_SHORT).show();
+            toBeOrNotToBeValid = false;
+            return toBeOrNotToBeValid;
+        }
 
-        double price = 0.00;
-        if (!TextUtils.isEmpty(bookPriceString)) {
+        if (!TextUtils.isEmpty(supplierNameString)) {
+            bookValues.put(BookEntry.COLUMN_SUPPLIER_NAME, supplierNameString);
+        } else {
+            Toast.makeText(EditorActivity.this, getString(R.string.insertSupplierName), Toast.LENGTH_SHORT).show();
+            toBeOrNotToBeValid = false;
+            return toBeOrNotToBeValid;
+        }
+
+        if (!TextUtils.isEmpty(supplierNumberString)) {
+            bookValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, supplierNumberString);
+        } else {
+            Toast.makeText(EditorActivity.this, getString(R.string.enter_phone_first), Toast.LENGTH_SHORT).show();
+            toBeOrNotToBeValid = false;
+            return toBeOrNotToBeValid;
+        }
+
+        if (!TextUtils.isEmpty(bookPriceString) && Double.parseDouble(bookPriceString) >= 0) {
+            double price;
             price = Double.parseDouble(bookPriceString);
+            bookValues.put(BookEntry.COLUMN_PRICE, price);
+        } else {
+            Toast.makeText(EditorActivity.this, getString(R.string.starting_price), Toast.LENGTH_SHORT).show();
+            toBeOrNotToBeValid = false;
+            return toBeOrNotToBeValid;
         }
-        bookValues.put(BookEntry.COLUMN_PRICE, price);
 
-        int quantity = 0;
-        if (!TextUtils.isEmpty(bookQuantityString)) {
+        if (!TextUtils.isEmpty(bookQuantityString) && Integer.parseInt(bookQuantityString) >= 0) {
             quantity = Integer.parseInt(bookQuantityString);
+            bookValues.put(BookEntry.COLUMN_QUANTITY, quantity);
+        } else {
+            Toast.makeText(EditorActivity.this, getString(R.string.start_quantity), Toast.LENGTH_SHORT).show();
+            toBeOrNotToBeValid = false;
+            return toBeOrNotToBeValid;
         }
-        bookValues.put(BookEntry.COLUMN_QUANTITY, quantity);
 
         if (currentBookUri == null) {
             Uri newUri = getContentResolver().insert(BookEntry.CONTENT_URI, bookValues);
@@ -311,6 +387,9 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
                         Toast.LENGTH_SHORT).show();
             }
         }
+
+        toBeOrNotToBeValid = true;
+        return toBeOrNotToBeValid;
     }
 
 }

@@ -34,11 +34,16 @@
     <string name="update_book_fail">Updating the book failed.</string>
     <string name="update_book_success">Updating the book was a success!</string>
     <string name="sell">Sell</string>
-    <string name="quan">Quantity:</string>
     <string name="not_in_stock_toast">This book is not in stock.</string>
     <string name="sold_toast">Sold!</string>
     <string name="error_selling_book">There was an error selling the book.</string>
     <string name="call_supplier">Call Supplier</string>
     <string name="addInventory">+</string>
     <string name="subtractInventory">-</string>
+    <string name="quantity_too_small">Quantity cannot be less than 0</string>
+    <string name="enter_phone_first">Please save a phone number to the database first.</string>
+    <string name="insertSupplierName">Please enter a supplier name.</string>
+    <string name="enter_book_name">Enter a book name before saving.</string>
+    <string name="starting_price">Please enter a price of at least $0.</string>
+    <string name="start_quantity">Please enter a quantity of at least 0.</string>
 </resources>
