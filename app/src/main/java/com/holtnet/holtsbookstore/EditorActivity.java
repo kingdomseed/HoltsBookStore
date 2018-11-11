@@ -109,9 +109,14 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(editSupplierPhoneText.getText())) {
+
                     Intent intent = new Intent(Intent.ACTION_DIAL);
                     intent.setData(Uri.parse(("tel:" + editSupplierPhoneText.getText().toString())));
-                    startActivity(intent);
+                    if (intent.resolveActivity(getPackageManager()) != null)
+                    {
+                        startActivity(intent);
+                    }
+
                 } else {
                     Toast.makeText(EditorActivity.this, getString(R.string.enter_phone_first), Toast.LENGTH_SHORT).show();
                 }
@@ -332,7 +337,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return toBeOrNotToBeValid;
         }
 
-        if (!TextUtils.isEmpty(supplierNumberString)) {
+        if (!TextUtils.isEmpty(supplierNumberString) && supplierNameString.length() > 9) {
             bookValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, supplierNumberString);
         } else {
             Toast.makeText(EditorActivity.this, getString(R.string.enter_phone_first), Toast.LENGTH_SHORT).show();

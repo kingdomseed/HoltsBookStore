@@ -41,7 +41,7 @@
     <string name="addInventory">+</string>
     <string name="subtractInventory">-</string>
     <string name="quantity_too_small">Quantity cannot be less than 0</string>
-    <string name="enter_phone_first">Please save a phone number to the database first.</string>
+    <string name="enter_phone_first">Please save a phone number of at least 10 digits to the database first.</string>
     <string name="insertSupplierName">Please enter a supplier name.</string>
     <string name="enter_book_name">Enter a book name before saving.</string>
     <string name="starting_price">Please enter a price of at least $0.</string>
