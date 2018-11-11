@@ -337,7 +337,7 @@ public class EditorActivity extends AppCompatActivity implements LoaderManager.L
             return toBeOrNotToBeValid;
         }
 
-        if (!TextUtils.isEmpty(supplierNumberString) && supplierNameString.length() > 9) {
+        if (!TextUtils.isEmpty(supplierNumberString) && supplierNumberString.length() > 9) {
             bookValues.put(BookEntry.COLUMN_SUPPLIER_PHONE_NUMBER, supplierNumberString);
         } else {
             Toast.makeText(EditorActivity.this, getString(R.string.enter_phone_first), Toast.LENGTH_SHORT).show();
